@@ -1,0 +1,13 @@
+#############
+# HealthBot #
+#############
+
+#just echos out the problems. nothing to configure!
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+printf "[!] %s\n" "${health_problems[@]}"

@@ -1,0 +1,22 @@
+#############
+# HealthBot #
+#############
+
+#checks that the system isn't under heavy load
+
+#maximum allowed load average
+threshold=10
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+result=`/usr/bin/uptime | awk -F'load average:' '{ print $2}' | sed 's/\./ /g' | awk '{print $1}'`
+
+if [ $result -ge $threshold ]; then
+	health_problems+=("Load Average is at $result")
+fi

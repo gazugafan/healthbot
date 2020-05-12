@@ -1,0 +1,22 @@
+#############
+# HealthBot #
+#############
+
+#checks to make sure important processes are still running
+
+#which processes to look for
+process_names=( nginx php-fpm mysqld )
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+for i in ${process_names[@]}; do
+	result=`ps ax |grep -v grep | grep -c $i`
+	if [ $result = 0 ]; then
+		health_problems+=("$i is not running")
+	fi;
+done

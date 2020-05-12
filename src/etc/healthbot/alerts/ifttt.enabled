@@ -1,0 +1,56 @@
+#############
+# HealthBot #
+#############
+
+#Triggers an IFTTT webhook, which you can use as the IF trigger in your IFTTT applets.
+#You can have several servers use the same applet by specifying a server name for the value1 field, and then using that as an ingredient in your applet to determine which server triggered the webhook.
+#The list of health problems is sent to the webhook as the value2 ingredient.
+
+
+#Your IFTTT webhook key, found in your IFTTT webhook connection settings
+ifttt_webhook_key=asdf12324as-asdf1234asdf1234asd-asdf1234asd
+
+#The event name of the IFTTT webhook to trigger
+ifttt_webhook_name=server-health
+
+#This will be passed to the IFTTT webhook as value1, which you can reference in your IFTTT applet as an ingredient. 
+ifttt_webhook_value1="My Server Name"
+
+#If there are multiple health problems to be sent in value2, they will be separated by this
+problem_separator=" | "
+
+#Set to "yes" to suppress output. Leave as "no" to see the response from the webhook request while you're still testing things out.
+suppress_output=no
+
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+#a function to join an array of strings together with a separator into a new var
+function join {
+    VAR=$1 SEP=$2
+    local __A=$3 __B
+    printf -v __B "${SEP}%s" "${@:4}"
+    printf -v "$VAR" '%s' "$__A$__B"
+}
+
+join problems "$problem_separator" "${health_problems[@]}"
+
+#if suppressing output, we'll add some extra flags to the curl command
+suppression_flags=""
+if [ $suppress_output = yes ]; then
+	suppression_flags="-s -o /dev/null"
+fi
+
+#perform the webhook request
+curl $suppression_flags -d "value1=$ifttt_webhook_value1&value2=$problems" https://maker.ifttt.com/trigger/$ifttt_webhook_name/with/key/$ifttt_webhook_key
+
+#if outputting the response, output an extra line-break to keep things pretty
+if [ $suppress_output = no ]; then
+	echo
+fi

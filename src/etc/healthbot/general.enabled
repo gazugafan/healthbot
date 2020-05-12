@@ -1,0 +1,19 @@
+#############
+# HealthBot #
+#-----------################################
+# Ridiculously simple server health alerts #
+# https://github.com/gazugafan/healthbot   #
+############################################
+
+#HealthBot starts by running all .enabled files in this folder to load general configuration or do any other bootstrapping.
+#Next, HealthBot runs all .enabled files in the /checks subfolder to check for health problems--adding any problems it finds to a health_problems array.
+#Finally, if any problems are found (and alert throttling isn't in effect), HealthBot will run all .enabled files in the /alerts subfolder to alert you of the problems in various ways.
+
+#This file contains general configuration options for HealthBot. Configuration for each check and alert is contained right in their respective file.
+
+
+#how often should alerts be sent? you might not want to get spammed with alerts everytime this script runs while problems are happening.
+#first: only send alerts the first time problems are encountered. once no problems occur, this is cleared and alerts can be sent again.
+#12345: if set to a number, alerts will not be sent within this many seconds of each other.
+#no: send alerts every single there are any problems.
+throttle_alerts=no

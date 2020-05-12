@@ -1,0 +1,22 @@
+#############
+# HealthBot #
+#############
+
+#checks that the swap file isn't too full
+
+#minimum percent of swap that should be available
+threshold=80
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+result=`/usr/bin/free -m | grep Swap | awk '{print $3/$2 * 100.0}' | cut -d\. -f1`
+
+if [ $result -ge $threshold ]; then
+	health_problems+=("Swap current at $result% capacity")
+fi

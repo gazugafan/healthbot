@@ -1,0 +1,25 @@
+#############
+# HealthBot #
+#############
+
+#checks that a URL is available and contains an expected string
+
+#The URL to check
+url="https://www.example.com"
+
+#Make sure this string is found on the page
+search_string="Find me"
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+result=`wget -q $url -O - | grep "$search_string" |wc -l`
+
+if [ ! $result -ge '1' ]; then
+	health_problems+=("Could not find \"$search_string\" at $url")
+fi

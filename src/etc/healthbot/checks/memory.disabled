@@ -1,0 +1,22 @@
+#############
+# HealthBot #
+#############
+
+#checks that too much memory isn't being used
+
+#minimum percent of system memory that should be available
+threshold=99
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+result=`/usr/bin/free -m | grep Mem | awk '{print $3/$2 * 100.0}' | cut -d\. -f1`
+
+if [ $result -ge $threshold ]; then
+	health_problems+=("System memory usage at $result%")
+fi

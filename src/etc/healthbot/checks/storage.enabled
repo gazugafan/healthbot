@@ -1,0 +1,26 @@
+#############
+# HealthBot #
+#############
+
+#checks for partitions that are running low on storage space
+
+#which partitions to check
+partitions=( / )
+
+#minimum percent of storage space that should be available
+threshold=80
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+for i in ${partitions[@]}; do
+	result=`/bin/df -h $i | tail -1 |awk '{print $5}' | sed -e 's/\%//g'`
+	if [ $result -ge $threshold ]; then
+		health_problems+=("$i currently at $result% storage capacity")
+	fi
+done;

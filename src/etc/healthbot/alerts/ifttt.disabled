@@ -42,9 +42,11 @@ function join {
 join problems "$problem_separator" "${health_problems[@]}"
 
 #if suppressing output, we'll add some extra flags to the curl command
-suppression_flags=""
 if [ $suppress_output = yes ]; then
 	suppression_flags="-s -o /dev/null"
+else
+	suppression_flags=""
+	echo "Sending IFTTT webhook request..."
 fi
 
 #perform the webhook request

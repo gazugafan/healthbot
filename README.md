@@ -45,6 +45,9 @@ The main HealthBot script is run via an hourly cronjob (you might consider incre
 2) Runs the enabled health checks in `/etc/healthbot/checks`
 3) If any problems are found, and alert throttling isn't an issue, it runs all the enabled alerts in `/etc/healthbot/alerts`
 
+## Testing
+Just run `healthbot` to run HealthBot once and test your configuration immediately. By default, stdout alerts are enabled, which will echo out any problems back to the command-line for you to see. If you don't see anything, it's possible that all of the default health checks are passing. By default, HealthBot checks to make sure nginx, php-fpm, and mysqld are running in the processes check, and that you're not running lower than 80% capacity on storage/swap/inode space in the storage, swap, and inode checks. Tweak some of those thresholds or add some dummy processes to see health problems in action!
+
 ## Extending
 It's so easy! Just copy one of the checks or alerts and use it as a base to create your own. Each one contains both it's own configuration options AND the code to make it work. They're honestly really simple. If you come up with a good one, feel free to send a PR and I'll add it for everyone else to use!
 

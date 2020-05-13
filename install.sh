@@ -53,12 +53,13 @@ function healthbot_install {
 		problem "Could not extract configuration files."
 	fi
 
-	mv healthbot /etc/healthbot
+	cp -r healthbot /etc
 	if [ ! $? -eq 0 ] || [ ! -d /etc/healthbot ] || [ ! -d /etc/healthbot/checks ] || [ ! -d /etc/healthbot/alerts ]; then
 		problem "Could not move configuration to /etc."
 	fi
 	
 	chmod -R 755 /etc/healthbot
+	rm -Rf healthbot
 
     #create cronjob
     echo "[+] Creating hourly cronjob at /etc/cron.d/healthbot..."

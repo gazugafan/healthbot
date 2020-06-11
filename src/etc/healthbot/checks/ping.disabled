@@ -1,0 +1,26 @@
+#############
+# HealthBot #
+#############
+
+#checks to make sure we're getting a response when pinging certain servers
+
+#which servers to ping
+servers=( 123.456.789.012 987.654.321.098 google.com )
+
+#maximum number of seconds to wait before giving up
+timeout=3
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+for i in ${servers[@]}; do
+	result=`ping -c 1 -W $timeout $i >/dev/null 2>&1`
+	if [ $? -ne 0 ]; then
+		health_problems+=("$i is not responding to a ping")
+	fi
+done;

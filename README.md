@@ -38,7 +38,7 @@ Just change the extensions on these configuration files to `.enabled` or `.disab
 
 In `/etc/healthbot/alerts` you'll find all of the alerts that HealthBot will send whenever the health checks find any problems. There are 2 included out-of-the-box...
 * stdout (just echos out the problems to the commandline. Mostly useful for testing, or maybe for piping to something else)
-* ifttt (Sends the problems to an IFTTT webhook. You can use this as an IFTTT trigger and then do whatever you want with it. Like maybe send yourself an email or give yourself a call?)
+* ifttt (Sends the problems to an [IFTTT webhook](https://ifttt.com/maker_webhooks). You can use this as an IFTTT trigger and then do whatever you want with it. Like maybe send yourself an email or give yourself a call?)
 
 ## How it works
 The main HealthBot script is run via an hourly cronjob (you might consider increasing the frequency after everything is configured). Everytime it runs, it...

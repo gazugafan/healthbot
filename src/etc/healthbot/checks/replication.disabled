@@ -23,30 +23,35 @@ seconds_behind_threshold=3600
 # HACKERS MAY PROCEED BELOW #
 #############################
 
-mysql_command="/usr/bin/mysql"
+mysql_command="mysql"
+
 [ ! -z "$host" ] && mysql_command+=" -h $host"
 [ ! -z "$user" ] && mysql_command+=" -u $user"
 [ ! -z "$password" ] && mysql_command+=" -p$password"
 mysql_command+=' -Bse '
-results=`$mysql_command "SHOW SLAVE STATUS\G" 2> /dev/null`
+results=`$mysql_command "SHOW SLAVE STATUS\G" 2>&1`
 
-if [ ! -z "$results" ]; then
-	io_running=`echo "$results" | grep Slave_IO_Running: | awk '{ print $2 }'`
-	sql_running=`echo "$results" | grep Slave_SQL_Running: | awk '{ print $2 }'`
-	last_error=`echo "$results" | grep Last_Error: | tr -s " " | cut -d ' ' -f 3-`
-	seconds_behind=`echo "$results" | grep Seconds_Behind_Master: | awk '{ print $2 }'`
-	
-	[ "$io_running" != "Yes" ] && health_problems+=("Replication IO is not running")
-	[ "$sql_running" != "Yes" ] && health_problems+=("Replication SQL is not running")
-	[ ! -z "$last_error" ] && health_problems+=("Replication has run into the following error: $last_error")
-	
-	if [ -z $seconds_behind ]; then
-		health_problems+=("Replication is not functioning")
-	elif [ $seconds_behind = "NULL" ]; then
-		health_problems+=("Replication is not functioning")
-	elif [ $seconds_behind -ge $seconds_behind_threshold ]; then
-		health_problems+=("Replication is $seconds_behind seconds behind")
+if [ $? -eq 0 ]; then
+	if [ ! -z "$results" ]; then
+		io_running=`echo "$results" | grep Slave_IO_Running: | awk '{ print $2 }'`
+		sql_running=`echo "$results" | grep Slave_SQL_Running: | awk '{ print $2 }'`
+		last_error=`echo "$results" | grep Last_Error: | tr -s " " | cut -d ' ' -f 3-`
+		seconds_behind=`echo "$results" | grep Seconds_Behind_Master: | awk '{ print $2 }'`
+		
+		[ "$io_running" != "Yes" ] && health_problems+=("Replication IO is not running")
+		[ "$sql_running" != "Yes" ] && health_problems+=("Replication SQL is not running")
+		[ ! -z "$last_error" ] && health_problems+=("Replication has run into the following error: $last_error")
+		
+		if [ -z $seconds_behind ]; then
+			health_problems+=("Replication is not functioning")
+		elif [ $seconds_behind = "NULL" ]; then
+			health_problems+=("Replication is not functioning")
+		elif [ $seconds_behind -ge $seconds_behind_threshold ]; then
+			health_problems+=("Replication is $seconds_behind seconds behind")
+		fi
+	else
+		health_problems+=("Could not get replication status: Empty response from MySQL")
 	fi
 else
-	health_problems+=("Could not get replication status")
+	health_problems+=("Could not get replication status: $results")
 fi

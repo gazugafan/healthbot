@@ -4,7 +4,7 @@ Ridiculously simple server health alerts
 This is an extremely lightweight, stupidly simple to extend, and easy to hack server health monitor. For when Zabbix, Cacti, NetData, OpenNMS, Icigna, etc. are WAY overkill. Use it to make sure your server isn't about to explode for some reason.
 
 ## Requirements
-Should run on most Linux servers. All dependencies are probably already installed, like `wget`, `grep`, `awk`, etc.
+Should run on most Linux servers. All dependencies are probably already installed, like `curl`, `wget`, `grep`, `awk`, `cut`, `tr` etc.
 
 ## Installation
 Just run `install.sh` as root. Here's a one-liner to download that file from this repository, run it, and then delete it...
@@ -32,6 +32,7 @@ In `/etc/healthbot/checks` you'll find all of the health checks that HealthBot w
 * load (check for high average load)
 * processes (make sure important processes are running)
 * web (make sure a web request returns as expected)
+* replication (check that a MySQL replicant is running well)
 
 Just change the extensions on these configuration files to `.enabled` or `.disabled` to turn on the ones you want. Edit each file to tweak their configuration options. If you look below the configuration options in each file, you'll see the actual code that runs to perform the check. They're all REALLY simple. Feel free to hack at them. Or better yet, copy and paste one to start creating your own!
 

@@ -74,7 +74,7 @@ if [ $problems_count -gt 0 ]; then
 			send_alerts
 		fi
 	fi
-elif [ $throttle_alerts = first ] && [ -f $stamp_file ]; then
+elif [ -f $stamp_file ]; then
 	#if problems have cleared, clear the throttle by deleting the stamp file
 	rm -f $stamp_file
 fi

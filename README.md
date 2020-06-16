@@ -24,23 +24,25 @@ Importantly, the HealthBot configuration files are just regular bash scripts. Yo
 
 The main configuration file is `/etc/healthbot/general.enabled`, but really the only thing in there is a little documentation and a single option for alert throttling. You might want to throttle alerts after you're done testing to make sure you don't end up spamming yourself whenever a health problem occurs.
 
+## Health Checks
 In `/etc/healthbot/checks` you'll find all of the health checks that HealthBot will perform every time it runs. Again, only ones ending with `.enabled` will be included. Anything else is disabled. The available health checks out-of-the-box are...
-* storage (check for low disk space)
-* inodes (check for low inode availability)
-* swap (check for low swap disk space)
-* memory (check for high system memory usage)
-* load (check for high average load)
-* processes (make sure important processes are running)
-* web (make sure a web request returns as expected)
-* ping (make sure certain servers or services are responding)
-* replication (check that a MySQL replicant is running well)
-* backup (check that a recent local backup file exists)
+* **storage:** check for low disk space
+* **inodes:** check for low inode availability
+* **swap:** check for low swap disk space
+* **memory:** check for high system memory usage
+* **load:** check for high average load
+* **processes:** make sure important processes are running
+* **web:** make sure a web request returns as expected
+* **ping:** make sure certain servers or services are responding
+* **replication:** check that a MySQL replicant is running well
+* **backup:** check that a recent local backup file exists
 
 Just change the extensions on these configuration files to `.enabled` or `.disabled` to turn on the ones you want. Edit each file to tweak their configuration options. If you look below the configuration options in each file, you'll see the actual code that runs to perform the check. They're all REALLY simple. Feel free to hack at them. Or better yet, copy and paste one to start creating your own!
 
-In `/etc/healthbot/alerts` you'll find all of the alerts that HealthBot will send whenever the health checks find any problems. There are 2 included out-of-the-box...
-* stdout (just echos out the problems to the commandline. Mostly useful for testing, or maybe for piping to something else)
-* ifttt (Sends the problems to an [IFTTT webhook](https://ifttt.com/maker_webhooks). You can use this as an IFTTT trigger and then do whatever you want with it. Like maybe send yourself an email or give yourself a call?)
+## Alerts
+In `/etc/healthbot/alerts` you'll find all of the alerts that HealthBot will send whenever the health checks find any problems. Again, only ones ending with `.enabled` are enabled. Anything else is disabled. There are 2 included out-of-the-box...
+* **stdout:** just echos out the problems to the commandline. Mostly useful for testing, or maybe for piping to something else
+* **ifttt:** Sends the problems to an [IFTTT webhook](https://ifttt.com/maker_webhooks). You can use this as an IFTTT trigger and then do whatever you want with it. Like maybe send yourself an email or give yourself a call?
 
 ## How it works
 The main HealthBot script is run via an hourly cronjob (you might consider increasing the frequency after everything is configured). Everytime it runs, it...

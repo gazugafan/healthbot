@@ -1,0 +1,50 @@
+#############
+# HealthBot #
+#############
+
+#checks that a local backup file was created or updated in a certain directory recently.
+#recursively looks in sub-directories as well
+
+#the directory where backup files are stored (or a sub-directory within this one)
+directory="/data/backup"
+
+#we'll only consider filenames ending in these extensions. set to an empty array to not limit by extension.
+extensions=( .gz .zip .tar .bak )
+
+#we'll only consider files of at least this size. Units are...
+#    b - for 512-byte blocks (this is the default if no suffix is used)
+#    c - for bytes
+#    w - for two-byte words
+#    k - for Kilobytes (units of 1024 bytes)
+#    M - for Megabytes (units of 1048576 bytes)
+#    G - for Gigabytes (units of 1073741824 bytes)
+minimum_size=1G
+
+#we'll only consider files created or updated at most this many minutes ago
+maximum_minutes_ago=1800
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+if [ ${#extensions[@]} -gt 0 ]; then
+	regex=".*\("
+	for i in ${extensions[@]}; do
+		#replace . with \. for use in regex...
+		dot_escaped_extension=$(echo "$i" | sed "s/\./\\\./")
+		regex+="$dot_escaped_extension\|"
+	done
+	#end the list of extensions with an impossible match...
+	regex+="a^\)"
+else
+	regex=".*"
+fi
+
+result=`find $directory -iregex "$regex" -type f -size +$minimum_size -mmin -$maximum_minutes_ago`
+
+if [ -z "$result" ]; then
+	health_problems+=("No recent backup files were found")
+fi

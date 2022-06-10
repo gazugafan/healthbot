@@ -1,0 +1,19 @@
+#############
+# HealthBot #
+#############
+
+#checks to make sure all supervisord processes are running
+
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+supervisorctl status > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+        health_problems+=("A supervisord process has stopped")
+fi;

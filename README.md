@@ -37,6 +37,7 @@ In `/etc/healthbot/checks` you'll find all of the health checks that HealthBot w
 * **replication:** check that a MySQL replicant is running well
 * **backup:** check that a recent local backup file exists
 * **supervisor:** check that all supervisord processes are running
+* **docker:** check that important docker containers are running
 
 Just change the extensions on these configuration files to `.enabled` or `.disabled` to turn on the ones you want. Edit each file to tweak their configuration options. If you look below the configuration options in each file, you'll see the actual code that runs to perform the check. They're all REALLY simple. Feel free to hack at them. Or better yet, copy and paste one to start creating your own!
 

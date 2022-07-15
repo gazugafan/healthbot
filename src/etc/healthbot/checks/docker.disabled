@@ -1,0 +1,22 @@
+#############
+# HealthBot #
+#############
+
+#checks to make sure important docker containers are running
+
+#which containers to look for
+container_names=( container_1 container_2 )
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+for i in ${container_names[@]}; do
+        result=`docker container inspect -f '{{.State.Status}}' $i`
+        if [ "$result" != "running" ]; then
+                health_problems+=("Docker container $i is not running")
+        fi;
+done

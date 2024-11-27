@@ -1,0 +1,88 @@
+#############
+# HealthBot #
+#############
+
+#checks that a backup file was created or updated in a certain directory in backblaze recently.
+#recursively looks in sub-directories as well
+#requires the 'b2' command line tool to be installed and configured for the root user
+
+#the backblaze path where backup files are stored
+directory="b2://bucketname/folder"
+
+#we'll only consider filenames ending in these extensions. set to an empty array to not limit by extension.
+extensions=( .gz .zip .tar .bak )
+
+#we'll only consider files of at least this size, in bytes (1000000000 is one GB)...
+minimum_size=1000000000
+
+#we'll only consider files created or updated at most this many minutes ago
+maximum_minutes_ago=2100
+
+
+
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+command='b2 ls --long --recursive'
+
+#add extensions to the command as --include flags
+for extension in "${extensions[@]}"; do
+	command+=" --include \"*$extension\""
+done
+
+#add the directory to the command
+command+=" $directory"
+
+#run the command and get the output. if the command fails, add a health problem
+output=`eval "$command"`
+if [ $? -ne 0 ]; then
+	echo "Failed to list backblaze files in $directory"
+	exit 1
+fi
+
+#if no files were found, add a health problem
+if [ -z "$output" ]; then
+	echo "No backup files found in $directory"
+	exit 1
+fi
+
+#parse each line of the output. Each line will be a space-separated list of fields.
+#the third and fourth fields are the date and time of the file upload. The fifth field is the file size in bytes.
+#check each line to see if the file is recent enough and large enough
+while IFS= read -r line; do
+	#split the line into fields
+	fields=($line)
+
+	#parse the date and time
+	IFS=' ' read -r -a date_time <<< "${fields[2]} ${fields[3]}"
+
+	#convert the date and time to a unix timestamp
+	upload_time=`date -d "${date_time[0]} ${date_time[1]}" +%s`
+
+	#check if the file is recent enough
+	if [ $((`date +%s` - $upload_time)) -gt $((maximum_minutes_ago * 60)) ]; then
+		continue
+	fi
+
+	#check if the file is large enough
+	if [ ${fields[4]} -lt $minimum_size ]; then
+		continue
+	fi
+
+	#the file is recent enough and large enough
+	#we can stop checking now
+	result="found"
+	break
+done <<< "$output"
+
+#add a health problem if no recent backup files were found
+if [ "$result" != "found" ]; then
+	echo "No recent backup files found in $directory"
+	exit 1
+fi

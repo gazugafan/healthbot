@@ -1,0 +1,22 @@
+#############
+# HealthBot #
+#############
+
+#checks to make sure important systemd services are running
+
+#which systemd services to look for
+service_names=( nginx )
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+for i in ${service_names[@]}; do
+        result=`systemctl is-active $i | grep -w -c active`
+        if [ $result = 0 ]; then
+                health_problems+=("$i has stopped")
+        fi;
+done

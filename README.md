@@ -32,6 +32,7 @@ In `/etc/healthbot/checks` you'll find all of the health checks that HealthBot w
 * **memory:** check for high system memory usage
 * **load:** check for high average load
 * **processes:** make sure important processes are running
+* **services:** make sure important systemd services are running
 * **web:** make sure a web request returns as expected
 * **ping:** make sure certain servers or services are responding
 * **replication:** check that a MySQL replicant is running well

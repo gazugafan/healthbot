@@ -23,7 +23,7 @@ seconds_behind_threshold=3600
 # HACKERS MAY PROCEED BELOW #
 #############################
 
-mysql_command="mysql"
+mysql_command="timeout 15s mysql --connect-timeout=10"
 
 [ ! -z "$host" ] && mysql_command+=" -h $host"
 [ ! -z "$user" ] && mysql_command+=" -u $user"

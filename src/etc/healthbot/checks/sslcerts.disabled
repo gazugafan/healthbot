@@ -6,7 +6,7 @@
 #requires openssl
 
 #which domains to check
-domains=( round.one )
+domains=( example.com yoursite.com )
 
 #minimum number of days before expiration (trigger an alert if expiring in under this many days)
 days_threshold=30

@@ -1,0 +1,31 @@
+#############
+# HealthBot #
+#############
+
+#checks if the SSL certificate for a specified list of domains is set to expire soon
+#requires openssl
+
+#which domains to check
+domains=( round.one )
+
+#minimum number of days before expiration (trigger an alert if expiring in under this many days)
+days_threshold=30
+
+
+
+
+
+#############################
+# HACKERS MAY PROCEED BELOW #
+#############################
+
+# calculate the threshold in seconds for openssl
+seconds_threshold=$(( days_threshold * 86400 ))
+
+for i in ${domains[@]}; do
+	# retrieve the cert and check if it expires within the specified window
+	# -checkend returns 0 if it will NOT expire, and 1 if it WILL expire (or already has)
+	if ! echo | openssl s_client -servername "$i" -connect "$i:443" 2>/dev/null | openssl x509 -noout -checkend $seconds_threshold > /dev/null; then
+		health_problems+=("SSL certificate for $i expires in less than $days_threshold days (or couldn't be checked)")
+	fi
+done

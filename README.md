@@ -4,7 +4,7 @@ Ridiculously simple server health alerts
 This is an extremely lightweight, stupidly simple to extend, and easy to hack server health monitor. For when Zabbix, Cacti, NetData, OpenNMS, Icigna, etc. are WAY overkill. Use it to make sure your server isn't about to explode for some reason.
 
 ## Requirements
-Should run on most Linux servers. All dependencies are probably already installed, like `curl`, `wget`, `grep`, `awk`, `cut`, `tr` etc.
+Should run on most Linux servers. All dependencies are probably already installed, like `curl`, `wget`, `grep`, `awk`, `cut`, `tr`, `openssl` etc.
 
 ## Installation
 Just run `install.sh` as root. Here's a one-liner to download that file from this repository, run it, and then delete it...
@@ -40,11 +40,12 @@ In `/etc/healthbot/checks` you'll find all of the health checks that HealthBot w
 * **supervisor:** check that all supervisord processes are running
 * **docker:** check that important docker containers are running
 * **backblaze:** check that a recent backblaze backup file eixsts
+* **sslcerts:** check that SSL certs aren't expiring soon
 
 Just change the extensions on these configuration files to `.enabled` or `.disabled` to turn on the ones you want. Edit each file to tweak their configuration options. If you look below the configuration options in each file, you'll see the actual code that runs to perform the check. They're all REALLY simple. Feel free to hack at them. Or better yet, copy and paste one to start creating your own!
 
 ## Alerts
-In `/etc/healthbot/alerts` you'll find all of the alerts that HealthBot will send whenever the health checks find any problems. Again, only ones ending with `.enabled` are enabled. Anything else is disabled. There are 2 included out-of-the-box...
+In `/etc/healthbot/alerts` you'll find all of the alerts that HealthBot will send whenever the health checks find any problems. Again, only ones ending with `.enabled` are enabled. Anything else is disabled. There are 3 included out-of-the-box...
 * **stdout:** just echos out the problems to the commandline. Mostly useful for testing, or maybe for piping to something else
 * **ifttt:** Sends the problems to an [IFTTT webhook](https://ifttt.com/maker_webhooks). You can use this as an IFTTT trigger and then do whatever you want with it. Like maybe send yourself an email or give yourself a call?
 * **smtp:** Sends an email over secure SMTP (STARTTLS) using your credentials. Only requires openssl and base64 (usually already installed). Great way to get a text message!
